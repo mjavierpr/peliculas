@@ -1,3 +1,20 @@
 * { margin: 0; padding: 0; box-sizing: border-box;
-    font: {family: arial, sans-serif; size: 1.17vw;}
+    font: {family: arial, sans-serif; size: 1vw;}}
+
+body {display: flex;}
+#sideLeft {width: 20%;}
+#sideRight {width: 80%;
+    > div.search_N_menu {margin: 2vw 0 1vw 0;}
+    > #showFilms {display: table; border-spacing: 3vw;
+        > .rowFilms {display: table-row;
+            > div.film {width: 16vw; color: rgb(16, 16, 81); margin: 0 2vw 0 2vw; display: table-cell;
+                > img {border-radius: 10px 10px 10px 10px; width: 100%;}
+                > div.title {height: 3em; margin-top: 1vw; font-weight: bold;}
+                > div.yearVote {display: flex; justify-content: space-between; margin-bottom: 2vw;}
+            }
+        }
+    }
+    #pageForwBac > #btnPgBack {display: none;}
+}
+
 
