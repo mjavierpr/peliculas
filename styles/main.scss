@@ -1,20 +1,37 @@
 * { margin: 0; padding: 0; box-sizing: border-box;
-    font: {family: arial, sans-serif; size: 1vw;}}
+    font-family: 'Lato', arial, sans-serif;}
 
-body {display: flex;}
-#sideLeft {width: 20%;}
-#sideRight {width: 80%;
-    > div.search_N_menu {margin: 2vw 0 1vw 0;}
-    > #showFilms {display: table; border-spacing: 3vw;
-        > .rowFilms {display: table-row;
-            > div.film {width: 16vw; color: rgb(16, 16, 81); margin: 0 2vw 0 2vw; display: table-cell;
-                > img {border-radius: 10px 10px 10px 10px; width: 100%;}
-                > div.title {height: 3em; margin-top: 1vw; font-weight: bold;}
-                > div.yearVote {display: flex; justify-content: space-between; margin-bottom: 2vw;}
+body {display: flex; font-size: 1.1em;}
+#sideLeft {width: 20rem; background-color: #f1f9ff;
+    > h1 { margin: 1em 0 0 1em;}
+}
+#sideRight {width: 70rem;
+    > div.search_N_menu {margin: 2em 0 2em 2.2em;
+        > .divSearch {border: 1px solid #5973ab; width: 20em; height: 2.4em; border-radius: 10px 10px 10px 10px; position: relative;
+            > #inputSearch {border: none; width: 90%; padding: 3px 8px; height: 100%; background: transparent; position: absolute;
+                &::placeholder {font-size: 0.9em; color: rgb(144, 142, 142);}
+            }
+            > #btnSearch {height: 70%; right: 10px; top: 13%; position: absolute;}
+        }
+    }
+    > #showFilms {display: flex; justify-content: flex-start; flex-wrap: wrap;
+        > div.film {width: 18%; margin: 0 2em 0 2.2em;
+            > a {text-decoration: none; color: rgb(16, 16, 81);
+                > img {border-radius: 8px 8px 8px 8px; width: 100%; -webkit-box-shadow: 0px 5px 24px -5px rgba(0,0,0,0.75); -moz-box-shadow: 0px 5px 24px -5px rgba(0,0,0,0.75); box-shadow: 0px 5px 24px -5px rgba(0,0,0,0.75);}
+                > div.title {margin: 0.9em 0 0.8em 0; font-weight: bold;}
+            }
+            > div.yearVote {display: flex; justify-content: space-between; margin-bottom: 2vw;
+                > span > img {height: 1.1em;}
             }
         }
     }
-    #pageForwBac > #btnPgBack {display: none;}
+    #pageForwBac {margin: 2em 0 3em 2.2em; display: flex; justify-content: center; align-items: center;
+        > button {background-color: rgb(242, 245, 248); border-radius: 20px 20px 20px 20px; border: 1px solid #b2b3b3; margin-right: 1.2vw;
+            &#btnPgBack {display: none; padding: 6px 20px;}
+            &#btnPgForw {padding: 6px 12px;}
+            > span {font-weight: bold; color: blue;}
+        }
+    }
 }
 
 

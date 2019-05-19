@@ -13,18 +13,24 @@
 
 <body>
     <div id="sideLeft">
+        <h1>MOVIBAZAR</h1>
 
     </div>
     <div id="sideRight">
         <div class="search_N_menu">
-            <input type="text" id="inputSearch">
-            <button id="btnSearch">Buscar</button>
+            <div class="divSearch">
+                <input type="text" id="inputSearch" placeholder="Encuentra lo que quieres">
+                <input type="image" src="img/icosearch.png" id="btnSearch" alt="Buscar">
+            </div>
         </div>
         <div id="showFilms">
         </div>
         <div id="pageForwBac">
-            <button id="btnPgBack">Atrás</button>
-            <button id="btnPgForw">Adelante</button>
+            <button id="btnPgBack"><span>&lt;</span> Atrás</button>
+            <button id="btnPgForw">Adelante <span>&gt;</span></button>
+            <div>
+                <span>Página: </span><span id="numPage"></span><span> / </span><span id="totalPages"></span>
+            </div>
         </div>
     </div>
 

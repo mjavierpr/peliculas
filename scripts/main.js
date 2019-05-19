@@ -10,20 +10,31 @@ const API_POP_URL = "movie/popular";
 const API_CATEG_URL = "genre/movie/list";
 const API_KEY = "?api_key=22e540d93b35f018eaca6bb68784d866";
 const IMG_PATH = 'http://image.tmdb.org/t/p/w185';
-const IMG_PATH_BACKDROP = "http://image.tmdb.org/t/p/w1280";
-var Films = [];
+let Films = [];
 
-let totalColumns = 4;
-let totalRows = 2;
+let shownFilms = 8;
 let currentPage = 1;
 window.addEventListener('load', load);
 
 function load() {
-    axios.get(API_URL + API_POP_URL + API_KEY).then((response) => {
+    let apiPopUrl = API_URL + API_POP_URL + API_KEY;
+    axiosRequest(apiPopUrl);
+    btnSearch.addEventListener('click', searchFilms);
+    inputSearch.addEventListener('keydown', searchEnter);
+    btnPgForw.addEventListener('click', PageForward);
+    btnPgBack.addEventListener('click', PageBack);
+}
+
+function axiosRequest(apiUrl) {
+    // axios devuelve una promesa
+    axios.get(apiUrl).then((response) => {
         Films = response.data.results;
         axios.get(API_URL + API_CATEG_URL + API_KEY).then((resp) => {
+            // el nombre de los géneros está aparte de data.results el cual sólo contiene los ids
+            // data.genres cotiene la lista con el nmbre de los géneros y su id de género
             let genres = resp.data.genres;
             Films = Films.map((film) => {
+                // arrGenres cogerá de data.genres el nombre del género e id que coincidan con la lista de id de género de cada película
                 let arrGenres = film['genre_ids'].map((id) => {
                     return genres.find((genre) => genre.id === id);
                 });
@@ -38,70 +49,75 @@ function load() {
                     genres: arrGenres,
                     'poster_path': IMG_PATH + film['poster_path'],
                     stars: Math.round(film['vote_average'] / 2),
-                    'backdrop': IMG_PATH_BACKDROP + film['backdrop_path']
+                    // 'backdrop': IMG_PATH_BACKDROP + film['backdrop_path']
                 };
             });
-            fillFilms(Films);
-            console.log('ojete 0:', Films);
+            showFilms(Films);
+            totalPages.innerText = parseInt(Films.length / shownFilms) + (Films.length % shownFilms > 0 ? 1 : 0);
+            if (Films.length > shownFilms) {   // En el caso de que sea una búsqueda
+                btnPgForw.style.display = "block";}
+            else {
+                btnPgForw.style.display = "none";}
         }).catch((error) => {
             console.log('Ha habido un problema:', error.message);
         });
     });
-    btnSearch.addEventListener('click', searchFilms);
-    btnPgForw.addEventListener('click', PageForward);
-    btnPgBack.addEventListener('click', PageBack);
 }
 
-function fillFilms(films, columns = totalColumns, rows = totalRows) {
-    let showFilm = document.getElementById("showFilms");
-    let strFilm = "", row, column, numFilm = 0;
-    for (row = 1; row < rows + 1; row++) {
-        strFilm += "<div class='rowFilms'>";
-        for (column = numFilm; column < Math.min(films.length, columns * row); column++) {
-            let {poster_path, title, release_date, vote_average} = films[column];
-            strFilm += "<div class='film'><img src=" + poster_path + " alt='poster " + title + "'>" +
-                        "<div class='title'>" + title + "</div>" +
-                        "<div class='yearVote'><span>" + release_date.slice(0, 4) + "</span>" +
-                        "<span class='vote'>" + vote_average + "</span></div></div>";
-        }
-        strFilm += "</div>";
-        numFilm = column;
-    }
-    showFilm.innerHTML = strFilm;
+function showFilms(films) {
+    let showDiv = document.getElementById("showFilms");
+    let strFilm = "";
+    let imgStar1 = "<img src='img/star.png'>";
+    let imgStar2 = "<img src='img/star2.png'>";
+    films.slice(0, shownFilms).forEach ((film) => {
+        let {poster_path, title, release_date, stars, id} = film;
+        strFilm += `<div class='film'><a href='detail.html?id=${id}'><img src=${poster_path} alt='poster ${title}'>
+                    <div class='title'>${title}</div></a>
+                    <div class='yearVote'><span>${release_date.slice(0, 4)}</span>
+                    <span class='vote'>${imgStar1.repeat(stars)}${imgStar2.repeat(5 - stars)}</span></div></div>`;
+    });
+    showDiv.innerHTML = strFilm;
+    numPage.innerText = currentPage;
 }
 
 function searchFilms() {
-    let textInput = document.getElementById("inputSearch").value.toLowerCase();
-    let arrFound = Films.filter(f => f.title.toLowerCase().includes(textInput));
-    //let lengSearched = arrFound.length;
-    let columns = lengPage < totalColumns ? lengPage : totalColumns;
-    let rows = lengPage > totalColumns ? totalRows : 1;
-    fillFilms(arrFound, columns, rows);
+    // Para una búsqueda de películas sobre el array películas
+    // let textInput = inputSearch.value.toLowerCase();
+    // FilmsFound = Films.filter(f => f.title.toLowerCase().includes(textInput));
+    let textInput = inputSearch.value;
+    let apiPSearchUrl = API_URL + "search/movie" + API_KEY + "&query=" + textInput;
+    axiosRequest(apiPSearchUrl);
+    currentPage = 1;
+    btnPgBack.style.display = "none";
+}
+
+function searchEnter(event) {
+    console.log(event.key);
+    if (event.key === "Enter") {
+        // event.preventDefault();
+        searchFilms();
+    }
 }
 
 function PageForward() {
-    let posEnd = currentPage * totalRows * totalColumns;
-    console.log('ojete 1:', Films);
+    let posEnd = currentPage * shownFilms;
     let arrPage = Films.slice(posEnd);
-    console.log('ojete 2:', arrPage);
     let lengPage = arrPage.length;
-    let columns = lengPage < totalColumns ? lengPage : totalColumns;
-    let rows = lengPage > totalColumns ? totalRows : 1;
-    fillFilms(arrPage, columns, rows);
-    if (lengPage < totalColumns * totalRows + 1) {
+    currentPage += 1;
+    showFilms(arrPage.slice(0, shownFilms));  // si length < shownFilms cogerá length
+    if (lengPage < shownFilms + 1) {
         btnPgForw.style.display = "none";
     }
     btnPgBack.style.display = "block";
-    currentPage += 1;
 }
 
 function PageBack() {
-    let posIni = (currentPage - 1) * totalRows * totalColumns - totalRows * totalColumns;
-    let arrPage = Films.slice(posIni, posIni + 8);
-    fillFilms(arrPage);
+    let posIni = (currentPage - 1) * shownFilms - shownFilms;
+    let arrPage = Films.slice(posIni, posIni + shownFilms);
+    currentPage -= 1;
+    showFilms(arrPage);
     if (posIni == 0) {
         btnPgBack.style.display = "none";
     }
     btnPgForw.style.display = "block";
-    currentPage -= 1;
 }
