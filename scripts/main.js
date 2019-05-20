@@ -25,43 +25,46 @@ function load() {
     btnPgBack.addEventListener('click', PageBack);
 }
 
-function axiosRequest(apiUrl) {
-    // axios devuelve una promesa
-    axios.get(apiUrl).then((response) => {
+async function axiosRequest(apiUrl) {
+    try {
+        // axios devuelve una promesa
+        let response = await axios.get(apiUrl);
+        console.log(response);
         Films = response.data.results;
-        axios.get(API_URL + API_CATEG_URL + API_KEY).then((resp) => {
-            // el nombre de los géneros está aparte de data.results el cual sólo contiene los ids
-            // data.genres cotiene la lista con el nmbre de los géneros y su id de género
-            let genres = resp.data.genres;
-            Films = Films.map((film) => {
-                // arrGenres cogerá de data.genres el nombre del género e id que coincidan con la lista de id de género de cada película
-                let arrGenres = film['genre_ids'].map((id) => {
-                    return genres.find((genre) => genre.id === id);
-                });
-                // film.genres = arrGenres;
-                // film['poster_path'] = IMG_PATH + film['poster.path'];
-                // film.stars = Math.round(film['vote_average'] / 2);
-                // film['backdrop'] = IMG_PATH_BACKDROP + film['backdrop_path'];
-                // return film;
-                // El return que viene a continuación es lo mismo que lo que hay comentado aquí
-                return {
-                    ...film,
-                    genres: arrGenres,
-                    'poster_path': IMG_PATH + film['poster_path'],
-                    stars: Math.round(film['vote_average'] / 2),
-                    // 'backdrop': IMG_PATH_BACKDROP + film['backdrop_path']
-                };
+        let resp = await axios.get(API_URL + API_CATEG_URL + API_KEY);
+        console.log(resp);
+        // el nombre de los géneros está aparte de data.results el cual sólo contiene los ids
+        // data.genres cotiene la lista con el nmbre de los géneros y su id de género
+        let genres = resp.data.genres;
+        Films = Films.map((film) => {
+            // arrGenres cogerá de data.genres el nombre del género e id que coincidan con la lista de id de género de cada película
+            let arrGenres = film['genre_ids'].map((id) => {
+                return genres.find((genre) => genre.id === id);
             });
-            showFilms(Films);
-            totalPages.innerText = parseInt(Films.length / shownFilms) + (Films.length % shownFilms > 0 ? 1 : 0);
-            if (Films.length > shownFilms) {   // En el caso de que sea una búsqueda
-                btnPgForw.style.display = "block";}
-            else {
-                btnPgForw.style.display = "none";}
-        }).catch((error) => {
-            console.log('Ha habido un problema:', error.message);
+            // film.genres = arrGenres;
+            // film['poster_path'] = IMG_PATH + film['poster.path'];
+            // film.stars = Math.round(film['vote_average'] / 2);
+            // film['backdrop'] = IMG_PATH_BACKDROP + film['backdrop_path'];
+            // return film;
+            // El return que viene a continuación es lo mismo que lo que hay comentado aquí
+            return {
+                ...film,
+                genres: arrGenres,
+                'poster_path': IMG_PATH + film['poster_path'],
+                stars: Math.round(film['vote_average'] / 2),
+                // 'backdrop': IMG_PATH_BACKDROP + film['backdrop_path']
+            };
         });
-    });
+        showFilms(Films);
+        totalPages.innerText = parseInt(Films.length / shownFilms) + (Films.length % shownFilms > 0 ? 1 : 0);
+        if (Films.length > shownFilms) {   // En el caso de que sea una búsqueda
+            btnPgForw.style.display = "block";}
+        else {
+            btnPgForw.style.display = "none";}
+    }
+    catch (error) {
+        console.log('Ha habido un problema:', error.message);
+    };
 }
 
 function showFilms(films) {
