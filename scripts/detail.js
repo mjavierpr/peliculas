@@ -3,24 +3,28 @@ const API_CATEG_URL = "genre/movie/list";
 const API_KEY = "?api_key=22e540d93b35f018eaca6bb68784d866";
 const IMG_PATH = 'http://image.tmdb.org/t/p/w185';
 const IMG_PATH_BACKDROP = "http://image.tmdb.org/t/p/w1280";
-let Img_Backdrop = "";
 
 let url = new URL(window.location.href);
 const ID_FILM = url.searchParams.get('id');
 
-let apiFilm = API_URL + "movie/" + ID_FILM + API_KEY;
+axiosRequest();
+let Favorites = localStorage.getItem("Favorites") !== null ? JSON.parse(localStorage.getItem("Favorites")) : [];
 let film = [];
-axios.get(apiFilm).then((response) => {
-    film = response.data;
-    // film.stars = Math.round(film['vote_average'] / 2);
-    // film['backdrop'] = IMG_PATH_BACKDROP + film['backdrop_path'];
-    if (document.readyState === "complete") {
-        showFilm();}
-    else {
-        window.addEventListener('load', showFilm);}
-}).catch((error) => {
-    console.log('Ha habido un problema:', error.message);
-});
+let Img_Backdrop = "";
+
+async function axiosRequest() {
+    try {
+        let response = await axios.get(API_URL + "movie/" + ID_FILM + API_KEY);
+        film = response.data;
+        if (document.readyState === "complete") {
+            showFilm();}
+        else {
+            window.addEventListener('load', showFilm);}
+    }
+    catch (error) {
+        console.log('Ha habido un problema:', error.message);
+    }
+}
 
 function showFilm() {
     let showDiv = document.getElementById("showDetail");
@@ -35,13 +39,13 @@ function showFilm() {
                 <div class="poster">
                     <div>
                         <img src=${IMG_PATH + poster_path} alt='poster ${title}'>
-                        <div></div>
+                        <div><input class='favorit' type='image' ${favoriteSrcNtitle(ID_FILM, 1)} alt='Favorito' id=${ID_FILM}></div>
                     </div>
                 </div>
                 <div class='bloq1'>
                     <div>
                         <div>Nota:</div>
-                        <div class='stars'><span>${vote_average}</span>&nbsp;&nbsp;&nbsp; ${imgStar1.repeat(numStars)}${imgStar2.repeat(10 - numStars)}</div>
+                        <div>${vote_average}</span>&nbsp;&nbsp;&nbsp; ${imgStar1.repeat(numStars)}${imgStar2.repeat(10 - numStars)}</div>
                     </div>
                     <div>
                         <div>Votos:</div>
@@ -89,6 +93,7 @@ function showFilm() {
             </div>`
     showDiv.innerHTML = strFilm;
     backdrop.addEventListener('click', bigImg);
+    document.getElementById(ID_FILM).addEventListener('click', favorite);
 }
 
 function subElems(elem) {
