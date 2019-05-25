@@ -10,22 +10,24 @@ const API_POP_URL = "movie/popular";
 const API_CATEG_URL = "genre/movie/list";
 const API_KEY = "?api_key=22e540d93b35f018eaca6bb68784d866";
 const IMG_PATH = 'http://image.tmdb.org/t/p/w185';
+
+axiosRequest();
 let Films = [];
 let Favorites = localStorage.getItem("Favorites") !== null ? JSON.parse(localStorage.getItem("Favorites")) : [];
 let ToSee = localStorage.getItem("ToSee") !== null ? JSON.parse(localStorage.getItem("ToSee")) : [];
-
 let shownFilms = 8;
 let currentPage = 1;
+let modTosee = false; // true cuando se muestra lista de Películas para ver, muestra botón quitar en vez de votos
+
 window.addEventListener('load', load);
 
 function load() {
-    axiosRequest();
     numToSee();
     btnSearch.addEventListener('click', searchFilms);
     inputSearch.addEventListener('keydown', searchEnter);
-    btnPgForw.addEventListener('click', PageForward);
-    btnPgBack.addEventListener('click', PageBack);
-    btnToSee.addEventListener('click', PageBack);
+    btnPgForw.addEventListener('click', pageForward);
+    btnPgBack.addEventListener('click', pageBack);
+    btnToSee.addEventListener('click', filmsToSee);
 }
 
 // función asíncrona
@@ -59,8 +61,8 @@ async function axiosRequest() {
             return {
                 ...film,
                 genres: arrGenres,
-                'poster_path': IMG_PATH + film['poster_path'],
-                stars: Math.round(film['vote_average'] / 2),
+                // 'poster_path': IMG_PATH + film['poster_path'],
+                // stars: Math.round(film['vote_average'] / 2),
                 // 'backdrop': IMG_PATH_BACKDROP + film['backdrop_path']
             };
         });
@@ -76,18 +78,19 @@ async function axiosRequest() {
 
 function showFilms(films) {
     let showDiv = document.getElementById("showFilms");
-    let strFilm = "";
-    let imgStar1 = "<img src='img/star.png' alt='star'>";
-    let imgStar2 = "<img src='img/star2.png' alt='star'>";
+    let strFilm = "", stars, imgStars, imgDelete;
     films.slice(0, shownFilms).forEach ((film) => {
-        let {poster_path, title, stars, id} = film;
+        let {poster_path, title, id, vote_average} = film;
+        stars = Math.round(vote_average / 2);
+        imgStars = "<img src='img/star.png' alt='star'>".repeat(stars) + "<img src='img/star2.png' alt='star'>".repeat(5 - stars);
+        imgDelete = `<input type='image' src='img/delete.png' alt='quitar' title='Quitar' class='delToSee' id=d${id}>`;
         strFilm += `<div class='film'>
-                    <a href='detail.html?id=${id}' class='draggable'>
-                        <img class='poster' src=${poster_path} id=p${id} alt='poster ${title}'>
+                    <a href='detail.html?id=${id}' ${!modTosee ? "class='draggable'" : ""}>
+                        <img src=${IMG_PATH + poster_path} id=p${id} alt='poster ${title}'>
                         <div class='title'>${title}</div>
                     </a>
                     <div class='favVote'>
-                        <span class='vote'>${imgStar1.repeat(stars)}${imgStar2.repeat(5 - stars)}</span>
+                        <span class='vote'>${modTosee ? imgDelete : imgStars}</span>
                         <span><input type='image' ${favoriteSrcNtitle(id, 1)} alt='Favorito' id=${id} class='favorit'></span>
                     </div></div>`
     });
@@ -102,17 +105,39 @@ function showFilms(films) {
     for (let elem of document.getElementsByClassName('favorit')) {
         elem.addEventListener('click', favorite);
     }
+    // Escuchadores para arrastrar-soltar
+    if (!modTosee) {   // si no se muestra el listado de Películas para ver
+        for (let elem of document.getElementsByClassName('draggable')) {
+            elem.addEventListener('dragstart', dragStart);
+            elem.addEventListener('dragend', dragEnd);
+        }
+        dragDrop.addEventListener('dragover', dragOver);
+        dragDrop.addEventListener('dragleave', dragLeave);
+        dragDrop.addEventListener('drop', drop);
+    }
+    else {
+        // escuchadoes para el botón quitar Peli para ver
+        for (let elem of document.getElementsByClassName('delToSee')) {
+            elem.addEventListener('click', delToSee);
+        }
+        // se quitar los escuchadores de arrastrar-soltar
+        dragDrop.removeEventListener('dragover', dragOver);
+        dragDrop.removeEventListener('dragleave', dragLeave);
+        dragDrop.removeEventListener('drop', drop);
+    }
 }
 
 function searchFilms() {
-    // Para una búsqueda de películas sobre el array películas:
-    // let textInput = inputSearch.value.toLowerCase();
-    // FilmsFound = Films.filter(f => f.title.toLowerCase().includes(textInput));
+    // Para una búsqueda de películas sobre el array películas: 
+    //      let textInput = inputSearch.value.toLowerCase();
+    //      FilmsFound = Films.filter(f => f.title.toLowerCase().includes(textInput));
     let textInput = inputSearch.value;
     let apiPSearchUrl = API_URL + "search/movie" + API_KEY + "&query=" + textInput;
     axiosRequest(apiPSearchUrl);
     currentPage = 1;
     btnPgBack.style.display = "none";
+    modTosee = false;
+    dragHere.style.display = "block";
 }
 
 function searchEnter(event) {
@@ -123,7 +148,7 @@ function searchEnter(event) {
     }
 }
 
-function PageForward() {
+function pageForward() {
     let posEnd = currentPage * shownFilms;
     let arrPage = Films.slice(posEnd);
     let lengPage = arrPage.length;
@@ -135,7 +160,7 @@ function PageForward() {
     btnPgBack.style.display = "block";
 }
 
-function PageBack() {
+function pageBack() {
     let posIni = (currentPage - 1) * shownFilms - shownFilms;
     let arrPage = Films.slice(posIni, posIni + shownFilms);
     currentPage -= 1;
@@ -146,22 +171,99 @@ function PageBack() {
     btnPgForw.style.display = "block";
 }
 
-function favorite (event) {
-    let id = event.target.id;
-    let pos = Favorites.indexOf(id);
-    pos > -1 ? Favorites.splice(pos, 1) : Favorites.push(id);
-    localStorage.setItem("Favorites", JSON.stringify(Favorites));
-    document.getElementById(id).src = favoriteSrcNtitle(id);
+function dragStart(event) {
+    let movie = event.currentTarget;
+    movie.classList.add('dragging');
+    dragDrop.style.outline = "3px solid #80EE80";
 }
 
-function favoriteSrcNtitle(id) {
-    let src = "src=img/";
-    let img = "favorite2.png";
-    let title = " title="
-    let titMsg = "'Me gusta'"; 
-    if (Favorites.includes(id.toString())) {
-        img = "favorite.png";
-        titMsg = "'Ya no me gusta'";
+function dragEnd(event) {
+    let movie = event.currentTarget;
+    movie.classList.remove('dragging');
+    dragDrop.style.outline = "none";
+}
+
+function dragOver(event) {
+    dragDrop.style.outline = "4px solid #80EE80";
+    event.preventDefault();
+}
+
+function dragLeave() {
+    dragDrop.style.outline = "3px solid #80EE80";
+}
+
+function drop(event) {
+    event.preventDefault();
+    //event.stopPropagation();
+    let dragging = document.querySelector('.dragging').toString();
+    let id = dragging.slice(dragging.indexOf('=') + 1);
+    let pos = ToSee.indexOf(id);
+    if (pos === -1) {
+        ToSee.push(id);
+        localStorage.setItem("ToSee", JSON.stringify(ToSee));
+        msgToSee('¡Película añadida!');
+        transformScale('scale(1.8)');
+        setTimeout(() => {
+            transformScale('scale(1)');
+        }, 800);
     }
-    return src + img + title + titMsg;
+    else {
+        msgToSee('¡Ya la tenías en la lista!');
+    }
+    numToSee();
+}
+
+function transformScale (scale) {
+    document.getElementById("imgEye").style.transform = scale;
+}
+
+function numToSee() {
+    document.getElementById('numToSee').innerText = ToSee.length.toString();
+}
+
+function msgToSee(msg) {
+    let divMsg = document.getElementById('dragHere');
+    let msgIni = divMsg.innerText;
+    divMsg.innerText = msg;
+    divMsg.style.animation = "move linear 2000ms 4";
+    setTimeout(() => {
+        divMsg.style.animation = "none";
+        divMsg.innerText = msgIni;
+    }, 4 * 1000);
+}
+
+async function filmsToSee() {
+    if (ToSee) {                  // if (ToSee.length > 0)
+        Films = [];
+        try {
+            let responses = await Promise.all(ToSee.map(id => axios.get(API_URL + "movie/" + id + API_KEY)));
+            Films = responses.map(film => film.data);
+            modTosee = true;
+            showFilms(Films);
+            dragHere.style.display = "none";
+        }
+        catch (error) {
+            console.log('Ha habido un problema:', error.message);
+        }
+    }
+    else {
+        msgToSee('No tienes películas');
+    }
+}
+
+function delToSee (event) {
+    let id = event.target.id;
+    document.getElementById(id).style.opacity = "0.3";
+    document.getElementById(id).title = "";
+    id = id.slice(1);
+    document.getElementById('p' + id).style.opacity = "0.4";
+    let pos = ToSee.indexOf(id);
+    ToSee.splice(pos, 1);
+    localStorage.setItem("ToSee", JSON.stringify(ToSee));
+    msgToSee('¡Película borrada!');
+    transformScale('scale(1.8)');
+    setTimeout(() => {
+        transformScale('scale(1)');
+    }, 800);
+    numToSee();
 }

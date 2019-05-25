@@ -12,10 +12,70 @@ body {
 
 #sideLeft {
   width: 20rem;
-  background-color: #f1f9ff;
+  min-height: 100vh;
+  padding-left: 1rem;
+  color: #e6e4fd;
+  background: url(../img/backleft.jpg) #0a3045 repeat;
+  background-size: 100%;
 }
-#sideLeft > h1 {
-  margin: 1em 0 0 1em;
+#sideLeft > a {
+  text-decoration: none;
+  color: white;
+  font-weight: bold;
+}
+#sideLeft > a > h1 {
+  margin: 1.2em 0 1.6em 0.2em;
+  -o-text-overflow: clip;
+  text-overflow: clip;
+  text-shadow: 1px 1px 0 #f4f7f6, -1px -1px 0 #f4f7f6, 1px -1px 0 #f4f7f6, -1px 1px 0 #f4f7f6, 4px 4px 8px #22752d, -4px 4px 8px #1c7f3e, 4px -4px 8px #1c7f3e, -4px -4px 8px #1c7f3e;
+  -webkit-transition: all 500ms cubic-bezier(0.42, 0, 0.58, 1);
+  -moz-transition: all 500ms cubic-bezier(0.42, 0, 0.58, 1);
+  -o-transition: all 500ms cubic-bezier(0.42, 0, 0.58, 1);
+  transition: all 500ms cubic-bezier(0.42, 0, 0.58, 1);
+}
+#sideLeft > div.MyList {
+  height: 5em;
+  width: 18rem;
+}
+#sideLeft > div.MyList > div.tit {
+  font-weight: bold;
+  margin: 1em 0 0.4em 0;
+}
+#sideLeft > div.MyList > #dragDrop {
+  height: 3.3em;
+  background-color: white;
+  border-radius: 3px 3px 3px 3px;
+  padding-right: 1.5em;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+#sideLeft > div.MyList > #dragDrop > div#btnToSee {
+  background-color: #e9efe9;
+  height: 100%;
+  width: 20%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+}
+#sideLeft > div.MyList > #dragDrop > div#btnToSee > img {
+  transition: transform 0.8s;
+  height: 24px;
+}
+#sideLeft > div.MyList > #dragDrop > div {
+  text-align: right;
+  font-size: 0.8em;
+}
+#sideLeft > div.MyList > #dragDrop > div > div#dragHere {
+  color: #86869b;
+  letter-spacing: 1px;
+}
+#sideLeft > div.MyList > #dragDrop > div > div.filmsToSee {
+  color: #346531;
+}
+#sideLeft > div.MyList > #dragDrop > div > div.filmsToSee > span#numToSee {
+  color: #5a5a71;
 }
 
 #sideRight {
@@ -25,7 +85,7 @@ body {
   margin: 2em 0 2em 2.2em;
 }
 #sideRight > div.search_N_menu > .divSearch {
-  border: 1px solid #5973ab;
+  border: 1px solid #346531;
   width: 20em;
   height: 2.4em;
   border-radius: 10px 10px 10px 10px;
@@ -68,18 +128,26 @@ body {
   -webkit-box-shadow: 0px 5px 24px -5px rgba(0, 0, 0, 0.75);
   -moz-box-shadow: 0px 5px 24px -5px rgba(0, 0, 0, 0.75);
   box-shadow: 0px 5px 24px -5px rgba(0, 0, 0, 0.75);
+  transition: transform 0.3;
+}
+#sideRight > #showFilms > div.film > a > img:hover {
+  transform: scale(1.013);
 }
 #sideRight > #showFilms > div.film > a > div.title {
   margin: 0.9em 0 0.8em 0;
   font-weight: bold;
+  height: 2.5em;
 }
-#sideRight > #showFilms > div.film > div.yearVote {
+#sideRight > #showFilms > div.film > div.favVote {
   display: flex;
   justify-content: space-between;
   margin-bottom: 2vw;
 }
-#sideRight > #showFilms > div.film > div.yearVote > span > img {
-  height: 1.1em;
+#sideRight > #showFilms > div.film > div.favVote > span.vote > img {
+  height: 1.2em;
+}
+#sideRight > #showFilms > div.film > div.favVote > span > input {
+  height: 1.2em;
 }
 #sideRight #pageForwBac {
   margin: 2em 0 3em 2.2em;
@@ -92,6 +160,7 @@ body {
   border-radius: 20px 20px 20px 20px;
   border: 1px solid #b2b3b3;
   margin-right: 1.2vw;
+  cursor: pointer;
 }
 #sideRight #pageForwBac > button#btnPgBack {
   display: none;
@@ -103,6 +172,24 @@ body {
 #sideRight #pageForwBac > button > span {
   font-weight: bold;
   color: blue;
+}
+
+@keyframes move {
+  0% {
+    text-shadow: 1px -1px 0 #691818, -1px 1px 0 #00ff40;
+  }
+  25% {
+    text-shadow: -1px -1px 0 #00ff40, 1px 1px 0 #691818;
+  }
+  50% {
+    text-shadow: -1px 1px 0 #691818, 1px -1px 0 #00ff40;
+  }
+  75% {
+    text-shadow: 1px 1px 0 #00ff40, -1px -1px 0 #691818;
+  }
+  100% {
+    text-shadow: 1px -1px 0 #691818, -1px 1px 0 #00ff40;
+  }
 }
 
 /*# sourceMappingURL=main.css.map */

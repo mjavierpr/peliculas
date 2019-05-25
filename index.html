@@ -8,13 +8,25 @@
     <link rel="stylesheet" href="styles/main.css">
     <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
     <script src="scripts/main.js"></script>
+    <script src="scripts/common.js"></script>
     <title>Películas</title>
 </head>
 
 <body>
     <div id="sideLeft">
-        <h1>MOVIBAZAR</h1>
-
+        <a href="#"><h1>MOVIBAZAR</h1></a>
+        <div class="MyList">
+            <div class="tit">Mis películas para ver</div>
+            <div id="dragDrop">
+                <div id="btnToSee">
+                    <img src="img/eye.png" id="imgEye" alt="Ver tus películas" title="Ver tus películas">
+                </div>
+                <div>           
+                    <div id="dragHere">Arrastra aquí</div>
+                    <div class="filmsToSee">Tienes <span id="numToSee"></span> películas para ver</div>
+                </div>
+            </div>
+        </div>
     </div>
     <div id="sideRight">
         <div class="search_N_menu">

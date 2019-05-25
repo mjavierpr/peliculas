@@ -1,0 +1,103 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: "Lato", arial, sans-serif;
+}
+
+body {
+  font-size: 1.2em;
+  background-color: #f9f9f9;
+}
+
+#showDetail {
+  margin-top: 2em;
+}
+#showDetail > div.title {
+  width: 50rem;
+  font-size: 2.2em;
+  background-color: #ffffff;
+  padding: 0.2em 0;
+  margin: 0 auto;
+  text-align: center;
+}
+#showDetail > div.hr {
+  border: 2px solid #4595fd;
+  width: 50rem;
+  margin: 0 auto;
+  padding: 0;
+}
+#showDetail > div.film {
+  width: 50rem;
+  margin: 0 auto;
+  padding: 1em 2em 0 0;
+  background-color: #ffffff;
+}
+#showDetail > div.film > div.poster {
+  position: relative;
+  right: 5px;
+}
+#showDetail > div.film > div.poster > div {
+  position: absolute;
+  right: 0;
+}
+#showDetail > div.film > div.poster > div > img:first-child {
+  height: 12em;
+  -webkit-box-shadow: 0px 8px 16px 0px rgba(0, 0, 0, 0.5);
+  -moz-box-shadow: 0px 8px 16px 0px rgba(0, 0, 0, 0.5);
+  box-shadow: 0px 8px 16px 0px rgba(0, 0, 0, 0.5);
+}
+#showDetail > div.film > div.poster > div > div {
+  text-align: center;
+}
+#showDetail > div.film > div.poster > div > div > input.favorit {
+  margin-top: 0.6em;
+}
+#showDetail > div.film > .bloq1 > div, #showDetail > div.film .bloq2 > div {
+  padding: 0.3em 0;
+  display: flex;
+}
+#showDetail > div.film > .bloq1 > div > div:first-child, #showDetail > div.film .bloq2 > div > div:first-child {
+  width: 10rem;
+  text-align: right;
+  margin-right: 1.2em;
+}
+#showDetail > div.film > .bloq1 > div > div:nth-child(2), #showDetail > div.film .bloq2 > div > div:nth-child(2) {
+  display: flex;
+  align-items: center;
+}
+#showDetail > div.film > .bloq1 {
+  width: 80%;
+}
+#showDetail > div.film > .bloq1 > div > div:nth-child(2) {
+  width: 25rem;
+}
+#showDetail > div.film > .bloq1 > div > div:nth-child(2) img {
+  height: 1.1em;
+}
+#showDetail > div.film .bloq2 > div > div:nth-child(2) {
+  width: 36rem;
+}
+#showDetail > div.film .bloq2 > div > img:nth-child(2) {
+  width: 60%;
+  margin: 1em 0 1em auto;
+  cursor: url("../img/lenmore.png"), auto;
+  -webkit-box-shadow: 0px 8px 16px 0px rgba(0, 0, 0, 0.5);
+  -moz-box-shadow: 0px 8px 16px 0px rgba(0, 0, 0, 0.5);
+  box-shadow: 0px 8px 16px 0px rgba(0, 0, 0, 0.5);
+}
+
+#bigImg {
+  position: absolute;
+  top: 0;
+  z-index: 1;
+  width: 100%;
+}
+#bigImg > img {
+  width: 92%;
+  margin-left: 4%;
+  box-shadow: 1.5px 2.6px 7.79px 11.21px rgba(0, 0, 0, 0.5);
+  cursor: url("../img/lenless.png"), auto;
+}
+
+/*# sourceMappingURL=detail.css.map */
