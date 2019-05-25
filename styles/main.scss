@@ -13,7 +13,7 @@ body {display: flex; font-size: 1.1em;}
     > div.MyList {height: 5em; width: 18rem;
         > div.tit {font-weight: bold; margin: 1em 0 0.4em 0;}
         > #dragDrop {height: 3.3em; background-color: white; border-radius: 3px 3px 3px 3px; padding-right: 1.5em; display: flex; justify-content: space-between; align-items: center;
-            > div#btnToSee {background-color: #e9efe9; height: 100%; width: 20%; display: flex; align-items: center; justify-content: center; cursor: pointer;
+            > div#btnToSee {background-color: #e9efe9; height: 100%; width: 20%; display: flex; align-items: center; justify-content: center; border-radius: 3px 0 0 3px; cursor: pointer;
                 > img {transition: transform 0.8s; height: 24px;}
             }
             > div {text-align: right; font-size: 0.8em;
@@ -26,12 +26,15 @@ body {display: flex; font-size: 1.1em;}
     }
 }
 #sideRight {width: 70rem;
-    > div.search_N_menu {margin: 2em 0 2em 2.2em;
-        > .divSearch {border: 1px solid #346531; width: 20em; height: 2.4em; border-radius: 10px 10px 10px 10px; position: relative;
+    > div.search_N_menu {margin: 2em 2.2em; display: flex; justify-content: space-between;
+        > .divSearch {border: 1px solid #042931; width: 20em; height: 2.4em; border-radius: 5px 5px 5px 5px; position: relative;
             > #inputSearch {border: none; width: 90%; padding: 3px 8px; height: 100%; background: transparent; position: absolute;
                 &::placeholder {font-size: 0.9em; color: rgb(144, 142, 142);}
             }
             > #btnSearch {height: 70%; right: 10px; top: 13%; position: absolute;}
+        }
+        > .selectSort {border: 1px solid #042931; width: 20em; border-radius: 5px 5px 5px 5px; padding: 0 6px; background: url(../img/icoselec.png) #fff no-repeat 17.4em; appearance: none; -webkit-appearance: none; -moz-appearance: none;
+            > option {height: 1.7em;}
         }
     }
     > #showFilms {display: flex; justify-content: flex-start; flex-wrap: wrap;

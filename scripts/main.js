@@ -20,7 +20,6 @@ let currentPage = 1;
 let modTosee = false; // true cuando se muestra lista de Películas para ver, muestra botón quitar en vez de votos
 
 window.addEventListener('load', load);
-
 function load() {
     numToSee();
     btnSearch.addEventListener('click', searchFilms);
@@ -28,6 +27,7 @@ function load() {
     btnPgForw.addEventListener('click', pageForward);
     btnPgBack.addEventListener('click', pageBack);
     btnToSee.addEventListener('click', filmsToSee);
+    selecSort.addEventListener('change', sortFilms);
 }
 
 // función asíncrona
@@ -77,7 +77,6 @@ async function axiosRequest() {
 }
 
 function showFilms(films) {
-    let showDiv = document.getElementById("showFilms");
     let strFilm = "", stars, imgStars, imgDelete;
     films.slice(0, shownFilms).forEach ((film) => {
         let {poster_path, title, id, vote_average} = film;
@@ -94,7 +93,7 @@ function showFilms(films) {
                         <span><input type='image' ${favoriteSrcNtitle(id, 1)} alt='Favorito' id=${id} class='favorit'></span>
                     </div></div>`
     });
-    showDiv.innerHTML = strFilm;
+    document.getElementById("showFilms").innerHTML = strFilm;
     numPage.innerText = currentPage;
     totalPages.innerText = parseInt(Films.length / shownFilms) + (Films.length % shownFilms > 0 ? 1 : 0);
     if (Films.length > shownFilms) {
@@ -132,8 +131,7 @@ function searchFilms() {
     //      let textInput = inputSearch.value.toLowerCase();
     //      FilmsFound = Films.filter(f => f.title.toLowerCase().includes(textInput));
     let textInput = inputSearch.value;
-    let apiPSearchUrl = API_URL + "search/movie" + API_KEY + "&query=" + textInput;
-    axiosRequest(apiPSearchUrl);
+    axiosRequest(API_URL + "search/movie" + API_KEY + "&query=" + textInput);
     currentPage = 1;
     btnPgBack.style.display = "none";
     modTosee = false;
@@ -266,4 +264,18 @@ function delToSee (event) {
         transformScale('scale(1)');
     }, 800);
     numToSee();
+}
+
+function sortFilms() {
+    let value = selecSort.value;
+    if (value == "title") {
+        Films.sort((a, b) => a[value] > b[value] ? 1 : -1);
+    }
+    else if (value == "release_date") {
+        Films.sort((a, b) => a[value] < b[value] ? 1 : -1);
+    }
+    else {  // numérico
+        Films.sort((a, b) => b[value] - a[value])
+    }
+    showFilms(Films);
 }

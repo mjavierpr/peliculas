@@ -5,6 +5,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <link href="https://fonts.googleapis.com/css?family=Lato" rel="stylesheet">
     <link rel="stylesheet" href="styles/main.css">
     <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
     <script src="scripts/main.js"></script>
@@ -34,6 +35,13 @@
                 <input type="text" id="inputSearch" placeholder="Encuentra lo que quieres">
                 <input type="image" src="img/icosearch.png" id="btnSearch" alt="Buscar">
             </div>
+            <select id="selecSort" class="selectSort">
+                <option value="" selected>Ordenar por</option>
+                <option value="title">Título</option>
+                <option value="vote_average">Puntuación</option>
+                <option value="popularity">Popularidad</option>
+                <option value="release_date">Fecha</option>
+            </select>
         </div>
         <div id="showFilms">
         </div>
@@ -45,8 +53,6 @@
             </div>
         </div>
     </div>
-
-    <link href="https://fonts.googleapis.com/css?family=Lato" rel="stylesheet">
 </body>
 
 </html>

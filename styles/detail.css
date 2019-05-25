@@ -16,7 +16,7 @@ body {
 #showDetail > div.title {
   width: 50rem;
   font-size: 2.2em;
-  background-color: #ffffff;
+  background-color: beige;
   padding: 0.2em 0;
   margin: 0 auto;
   text-align: center;
@@ -30,7 +30,7 @@ body {
 #showDetail > div.film {
   width: 50rem;
   margin: 0 auto;
-  padding: 1em 2em 0 0;
+  padding: 1em 2em 1.5em 0;
   background-color: #ffffff;
 }
 #showDetail > div.film > div.poster {
@@ -78,9 +78,17 @@ body {
 #showDetail > div.film .bloq2 > div > div:nth-child(2) {
   width: 36rem;
 }
-#showDetail > div.film .bloq2 > div > img:nth-child(2) {
+
+div.divBackdrop {
+  background-color: beige;
+  width: 50rem;
+  margin: 0 auto;
+  padding: 2em 0;
+  display: flex;
+  justify-content: center;
+}
+div.divBackdrop > img {
   width: 60%;
-  margin: 1em 0 1em auto;
   cursor: url("../img/lenmore.png"), auto;
   -webkit-box-shadow: 0px 8px 16px 0px rgba(0, 0, 0, 0.5);
   -moz-box-shadow: 0px 8px 16px 0px rgba(0, 0, 0, 0.5);
@@ -98,6 +106,39 @@ body {
   margin-left: 4%;
   box-shadow: 1.5px 2.6px 7.79px 11.21px rgba(0, 0, 0, 0.5);
   cursor: url("../img/lenless.png"), auto;
+}
+
+div#showMap {
+  width: 50rem;
+  font-size: 1.6em;
+  background-color: #ffffff;
+  margin: 0 auto 2em auto;
+  padding: 1.2em 1.1em 1.2em 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  background-size: cover;
+  background-blend-mode: lighten;
+  background-color: rgba(255, 255, 255, 0.9);
+}
+div#showMap > #mapBox {
+  height: 24em;
+  width: 75%;
+  -webkit-box-shadow: 0px 8px 16px 0px rgba(0, 0, 0, 0.5);
+  -moz-box-shadow: 0px 8px 16px 0px rgba(0, 0, 0, 0.5);
+  box-shadow: 0px 8px 16px 0px rgba(0, 0, 0, 0.5);
+}
+div#showMap > #mapMsg {
+  font-size: 0.6em;
+  margin: 0 0.1em 0.2em 0;
+  color: #a0a0a0;
+  font-weight: bold;
+}
+div#showMap .marker {
+  background-image: url("../img/icogeo.png");
+  cursor: pointer;
+  height: 25px;
+  width: 20px;
 }
 
 /*# sourceMappingURL=detail.css.map */

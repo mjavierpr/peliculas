@@ -85,15 +85,15 @@ function showFilm() {
                         <div>Página oficial:</div>
                         <div><a href=${homepage}>Aquí</a></div>
                     </div>
-                    <div>
-                        <div></div>
-                        <img id="backdrop" src=${IMG_PATH_BACKDROP + backdrop_path} alt='fondo ${title}'>
-                    </div>
                 </div>
             </div>`
     showDiv.innerHTML = strFilm;
+    backdrop.src = IMG_PATH_BACKDROP + backdrop_path;
+    backdrop.alt = "fondo " + title;
     backdrop.addEventListener('click', bigImg);
     document.getElementById(ID_FILM).addEventListener('click', favorite);
+    showMap.style.backgroundImage = `url(${IMG_PATH + backdrop_path})`;
+    mapBoxInit();
 }
 
 function subElems(elem) {
@@ -106,10 +106,71 @@ function bigImg() {
     bigDiv.innerHTML = `<img src=${Img_Backdrop} alt="fondo imagen">`;
     bigDiv.addEventListener('click', removBigImg);
     backdrop.style.display = "none";
+    showMap.style.display = "none";
 }
 
 function removBigImg() {
     let bigDiv = document.getElementById('bigImg');
     backdrop.style.display = "block";
+    showMap.style.display = "flex";
     bigDiv.innerHTML = "";
+}
+
+let longi = -3.6883;
+let lati = 40.4531;
+let watchId;
+
+function mapBoxInit() {
+    mapboxgl.accessToken = 'pk.eyJ1IjoicmFtYm92aWkiLCJhIjoiY2p3MzlnZHkxMGdlbjQ5bzZ2NmZzbTllciJ9.iw5wKuuvBK4IbznvoFRh8Q';
+    new mapboxgl.Map({
+        container: 'mapBox',
+        style: 'mapbox://styles/mapbox/streets-v11',
+        center: [longi, lati],
+        zoom: 10
+    });
+    if ("geolocation" in navigator) {
+        watchId = navigator.geolocation.watchPosition(newPos);
+    }
+    else {
+        mapMsg.innerText = "No tienes la geolocalización activada.";
+    }
+}
+
+function newPos (pos) {
+    long = pos.coords.longitude;
+    lat = pos.coords.latitude;
+    if (long !== longi && lat !== lati) {
+        navigator.geolocation.clearWatch(watchId);
+        nearCinema(long, lat);
+    }
+}
+
+async function nearCinema(long, lat) {
+    let response = await axios.get('https://geoip-db.com/json/geoip.php');
+    let city = response.data.state;
+    let coordCinemas = [
+        ['Marte', []],
+        ['Alicante', [[-0.4736475, 38.3549512], [-0.4882439, 38.3463443]]],
+        ['Valencia', [[-0.3566837, 39.4536315]]]];
+    let arrDif = coordCinemas.filter((elem) => elem[0] == city)
+        .map((elem) => elem[1]
+            .map((e) => Math.abs(Math.abs(long) - Math.abs(e[0]) + Math.abs(lat) - Math.abs(e[1])))
+        );
+    arrDif = arrDif[0];
+    let posCity = coordCinemas.map((elem) => elem[0]).indexOf(city);
+    let posCoords = arrDif.indexOf(arrDif.reduce((prev, actu) => prev < actu ? prev : actu));
+    let longit = coordCinemas[posCity][1][posCoords][0];
+    let latit = coordCinemas[posCity][1][posCoords][1];
+    let map = new mapboxgl.Map({
+        container: 'mapBox',
+        style: 'mapbox://styles/mapbox/streets-v11',
+        center: [longit, latit],
+        zoom: 17
+    });
+    let elem = document.createElement('div');
+    elem.className = 'marker';
+    new mapboxgl.Marker(elem)
+        .setLngLat({lng: longit, lat: latit})
+        .addTo(map);
+    mapMsg.innerText = "Este es tu cine más cercano";
 }

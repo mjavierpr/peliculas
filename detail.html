@@ -4,16 +4,27 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <link href="https://api.mapbox.com/mapbox-gl-js/v0.54.0/mapbox-gl.css" rel="stylesheet">
+    <link href="https://api.mapbox.com/mapbox-gl-js/plugins/mapbox-gl-geocoder/v4.2.0/mapbox-gl-geocoder.css" rel='stylesheet'>
+    <link href="https://fonts.googleapis.com/css?family=Lato" rel="stylesheet">
     <link href="styles/detail.css" rel="stylesheet">
     <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+    <script src="https://api.mapbox.com/mapbox-gl-js/v0.54.0/mapbox-gl.js"></script>
+    <script src="https://api.mapbox.com/mapbox-gl-js/plugins/mapbox-gl-geocoder/v4.2.0/mapbox-gl-geocoder.min.js"></script>
     <script src="scripts/detail.js"></script>
-    <script src="scripts/common.js"></script>    
+    <script src="scripts/common.js"></script>
     <title>Película - Detalle</title>
 </head>
 <body>
-    <div id="bigImg"></div>
-    <div id="showDetail">
+    <div id='bigImg'></div>
+    <div id='showDetail'>
     </div>
-    <link href="https://fonts.googleapis.com/css?family=Lato" rel="stylesheet">
+    <div class="divBackdrop">
+        <img src="" id="backdrop" alt="">
+    </div>
+    <div id='showMap'>
+        <div id='mapMsg'></div>        
+        <div id='mapBox'></div>
+    </div>
 </body>
 </html>
